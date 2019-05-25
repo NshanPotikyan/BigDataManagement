@@ -20,7 +20,9 @@ object Main {
   def main(args: Array[String]) {
      System.setProperty("hadoop.home.dir", "C:\\hadoop")
 
-
+    var timeBeg: Long = 0l
+    var timeEnd: Long = 0l
+    timeBeg = System.nanoTime
     val RawData: RDD[String] = sc.textFile("ionosphere.data")
 
     // taking distinct classes and transforming it to Map
@@ -81,10 +83,12 @@ object Main {
     val reducerOutput = new Reducer.Reduce(trainRDD.collectAsMap(),
                                            testRDD.collectAsMap(),
                                            ordered,K)
-
+    timeEnd = System.nanoTime
+    val timeDiff = (timeEnd - timeBeg) / 1e9
+    print("Time taken: " + timeDiff + " seconds" + "\n")
     reducerOutput.result.collect.foreach(println)
     str_to_num.foreach(println)
-
+    
   }
 
 
